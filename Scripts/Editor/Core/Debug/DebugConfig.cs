@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MyTools
 {
-    [CreateAssetMenu(fileName = "DebugConfig", menuName = "MyTools/Configs")]
+    [CreateAssetMenu(fileName = "DebugConfig", menuName = "MyTools/Debug Config")]
     public sealed class DebugConfig : ScriptableObject
     {
         [Serializable]
