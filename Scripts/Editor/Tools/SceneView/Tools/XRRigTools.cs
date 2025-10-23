@@ -14,8 +14,10 @@ namespace MyTools
         [InitializeOnEnterPlayMode]
         private static void OnEnterPlayMode()
         {
-            Debug.Log("OnEnterPlayMode - Enabling VR Rig FIRST");
-            EnableVRRigImmediately();
+            var vrRig = GetVRRig();
+            if (!vrRig) return;
+
+            EnableVRRigImmediately(vrRig);
         }
 
         [InitializeOnLoadMethod]
@@ -26,112 +28,63 @@ namespace MyTools
 
         private static void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            if (state == PlayModeStateChange.ExitingEditMode)
+            var vrRig = GetVRRig();
+            if (!vrRig) return;
+
+            switch (state)
             {
-                Debug.Log("ExitingEditMode - Saving VR Rig state and enabling it");
-                SaveVRRigStateAndEnable();
-            }
-            else if (state == PlayModeStateChange.EnteredEditMode)
-            {
-                Debug.Log("EnteredEditMode - Restoring VR Rig state");
-                EditorApplication.delayCall += RestoreVRRigState;
-            }
-            else if (state == PlayModeStateChange.EnteredPlayMode)
-            {
-                Debug.Log("EnteredPlayMode - Ensuring VR Rig is enabled");
-                EditorApplication.delayCall += EnsureVRRigEnabled;
+                case PlayModeStateChange.ExitingEditMode:
+                    SaveVRRigStateAndEnable(vrRig);
+                    break;
+
+                case PlayModeStateChange.EnteredEditMode:
+                    EditorApplication.delayCall += RestoreVRRigState;
+                    break;
+
+                case PlayModeStateChange.EnteredPlayMode:
+                    EditorApplication.delayCall += EnsureVRRigEnabled;
+                    break;
             }
         }
 
-        private static void SaveVRRigStateAndEnable()
+        private static void SaveVRRigStateAndEnable(GameObject vrRig)
         {
-            cachedVRRig = null;
-            EditorPrefs.DeleteKey(VR_RIG_PREF_KEY);
+            var wasEnabled = vrRig.activeSelf;
+            EditorPrefs.SetBool(VR_RIG_STATE_PREF_KEY, wasEnabled);
 
-            GameObject vrRig = GetVRRig();
-
-            if (vrRig)
-            {
-                var wasEnabled = vrRig.activeSelf;
-                EditorPrefs.SetBool(VR_RIG_STATE_PREF_KEY, wasEnabled);
-                Debug.Log($"Saved VR Rig state to EditorPrefs: {(wasEnabled ? "enabled" : "disabled")}");
-
-                if (!vrRig.activeSelf)
-                {
-                    vrRig.SetActive(true);
-                    Debug.Log($"ENABLED VR Rig for play mode: {vrRig.name}");
-                }
-                else
-                {
-                    Debug.Log($"VR Rig {vrRig.name} was already enabled");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("No VR Rig found to save state");
-            }
+            if (!wasEnabled)
+                vrRig.SetActive(true);
         }
 
         private static void RestoreVRRigState()
         {
-            GameObject vrRig = GetVRRig();
+            var vrRig = GetVRRig();
+            if (!vrRig) return;
 
-            if (vrRig)
-            {
-                bool wasEnabled = EditorPrefs.GetBool(VR_RIG_STATE_PREF_KEY, true);
-                vrRig.SetActive(wasEnabled);
-                Debug.Log($"RESTORED VR Rig to {(wasEnabled ? "enabled" : "disabled")}: {vrRig.name}");
-
-                EditorPrefs.DeleteKey(VR_RIG_STATE_PREF_KEY);
-            }
-            else
-            {
-                Debug.LogWarning("No VR Rig found to restore state");
-            }
+            bool wasEnabled = EditorPrefs.GetBool(VR_RIG_STATE_PREF_KEY, true);
+            vrRig.SetActive(wasEnabled);
+            EditorPrefs.DeleteKey(VR_RIG_STATE_PREF_KEY);
         }
 
-        private static void EnableVRRigImmediately()
+        private static void EnableVRRigImmediately(GameObject vrRig)
         {
-            cachedVRRig = null;
-            EditorPrefs.DeleteKey(VR_RIG_PREF_KEY);
-
-            GameObject vrRig = GetVRRig();
-
-            if (vrRig)
-            {
-                if (!vrRig.activeSelf)
-                {
-                    vrRig.SetActive(true);
-                    Debug.Log($"IMMEDIATELY ENABLED VR Rig: {vrRig.name}");
-                }
-                else
-                {
-                    Debug.Log($"VR Rig {vrRig.name} was already enabled");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("No VR Rig found for immediate enable");
-            }
+            if (!vrRig.activeSelf)
+                vrRig.SetActive(true);
         }
 
         private static void EnsureVRRigEnabled()
         {
-            GameObject vrRig = GetVRRig();
+            var vrRig = GetVRRig();
+            if (!vrRig) return;
 
-            if (vrRig && !vrRig.activeSelf)
-            {
+            if (!vrRig.activeSelf)
                 vrRig.SetActive(true);
-                Debug.Log($"ENSURE ENABLED VR Rig: {vrRig.name}");
-            }
         }
 
         private static GameObject GetVRRig()
         {
             if (cachedVRRig && IsValidSceneObject(cachedVRRig))
-            {
                 return cachedVRRig;
-            }
 
             if (!Application.isPlaying)
             {
@@ -139,11 +92,8 @@ namespace MyTools
                 if (savedInstanceID != 0)
                 {
                     cachedVRRig = EditorUtility.InstanceIDToObject(savedInstanceID) as GameObject;
-
                     if (cachedVRRig && IsValidSceneObject(cachedVRRig) && IsVRRig(cachedVRRig))
-                    {
                         return cachedVRRig;
-                    }
 
                     cachedVRRig = null;
                     EditorPrefs.DeleteKey(VR_RIG_PREF_KEY);
@@ -151,11 +101,8 @@ namespace MyTools
             }
 
             cachedVRRig = FindVRRigInScene();
-
             if (cachedVRRig && !Application.isPlaying)
-            {
                 EditorPrefs.SetInt(VR_RIG_PREF_KEY, cachedVRRig.GetInstanceID());
-            }
 
             return cachedVRRig;
         }
@@ -163,7 +110,6 @@ namespace MyTools
         private static bool IsVRRig(GameObject obj)
         {
             if (!obj) return false;
-
             if (obj.GetComponent("OVRCameraRig")) return true;
 
             return obj.name is "OVRCameraRig" or "VRRig" or "CameraRig";
@@ -175,16 +121,8 @@ namespace MyTools
                 .Where(obj => obj.scene.IsValid())
                 .ToArray();
 
-            foreach (GameObject obj in allGameObjects)
-            {
-                var component = obj.GetComponent("OVRCameraRig");
-                if (component)
-                {
-                    return obj;
-                }
-            }
-
             return allGameObjects.FirstOrDefault(obj =>
+                obj.GetComponent("OVRCameraRig") ||
                 obj.name is "OVRCameraRig" or "VRRig" or "CameraRig");
         }
 
@@ -195,17 +133,10 @@ namespace MyTools
 
         public static void ToggleVRRig()
         {
-            GameObject vrRig = GetVRRig();
+            var vrRig = GetVRRig();
+            if (!vrRig) return;
 
-            if (vrRig)
-            {
-                vrRig.SetActive(!vrRig.activeSelf);
-                Debug.Log($"VR Rig {(vrRig.activeSelf ? "enabled" : "disabled")}: {vrRig.name}");
-            }
-            else
-            {
-                Debug.LogWarning("No OVRCameraRig found in the scene.");
-            }
+            vrRig.SetActive(!vrRig.activeSelf);
         }
     }
 }

@@ -1,6 +1,8 @@
+#if ODIN_INSPECTOR || SIRENIX_ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
 using System;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace MyTools
@@ -11,7 +13,10 @@ namespace MyTools
         [Serializable]
         public struct Channel
         {
-            [ReadOnly] public string name;
+#if ODIN_INSPECTOR || SIRENIX_ODIN_INSPECTOR
+            [ReadOnly]
+#endif
+            public string name;
             public bool enabled;
         }
 
@@ -48,9 +53,11 @@ namespace MyTools
                 _lookup[c.name] = c.enabled;
             }
         }
-
+#if ODIN_INSPECTOR || SIRENIX_ODIN_INSPECTOR
         [Button(ButtonSizes.Medium)]
         [GUIColor(1f, 0.4f, 0.4f)]
+#endif
+
         private void CleanUpChannels()
         {
             if (channels.Count == 0)
