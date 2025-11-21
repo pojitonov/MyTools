@@ -25,6 +25,10 @@ namespace MyTools
             {
                 ApplyNewValues(savedState, viewType);
             }
+            else
+            {
+                ApplyDefaultValues(viewType);
+            }
 
             ActiveSceneView.sceneView.Repaint();
         }
