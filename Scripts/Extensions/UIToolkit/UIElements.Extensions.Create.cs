@@ -96,4 +96,11 @@ public static partial class UIToolKitExtensions
         element.Add(child);
         return element;
     }
+    
+    public static T SetParent<T>(this T element, VisualElement parent)
+        where T : VisualElement
+    {
+        parent.Add(element);
+        return element;
+    }
 }
