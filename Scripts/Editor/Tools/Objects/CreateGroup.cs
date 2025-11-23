@@ -7,7 +7,7 @@ namespace MyTools
 {
     internal static class CreateGroup
     {
-        static string baseName = "Group";
+        static readonly string _baseName = "Group";
 
         [MenuItem(Menus.OBJECT_MENU + "Group %g", validate = true, priority = Menus.OBJECT_INDEX + 101)]
         static bool ValidateGroup()
@@ -61,7 +61,7 @@ namespace MyTools
 
         private static GameObject GetEmptyObject(Vector3 position)
         {
-            string uniqueName = GetUniqueGameObjectName(baseName);
+            string uniqueName = GetUniqueGameObjectName(_baseName);
             GameObject groupObject = new GameObject(uniqueName)
             {
                 transform =
@@ -73,7 +73,7 @@ namespace MyTools
             };
 
             var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
-            if (prefabStage != null)
+            if (prefabStage)
             {
                 groupObject.transform.SetParent(prefabStage.prefabContentsRoot.transform, false);
             }

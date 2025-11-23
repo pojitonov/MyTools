@@ -65,10 +65,12 @@ namespace MyTools
 
         private static void PlayAudioClip(AudioClip clip)
         {
-            if (audioSourceObject == null)
+            if (!audioSourceObject)
             {
-                audioSourceObject = new GameObject("EditorAudioSource");
-                audioSourceObject.hideFlags = HideFlags.HideAndDontSave;
+                audioSourceObject = new GameObject("EditorAudioSource")
+                {
+                    hideFlags = HideFlags.HideAndDontSave
+                };
                 audioSource = audioSourceObject.AddComponent<AudioSource>();
             }
 
@@ -78,7 +80,7 @@ namespace MyTools
 
         private static void DestroyAudioSource()
         {
-            if (audioSourceObject != null)
+            if (audioSourceObject)
             {
                 Object.DestroyImmediate(audioSourceObject);
                 audioSourceObject = null;

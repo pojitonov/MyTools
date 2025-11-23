@@ -12,7 +12,7 @@ namespace MyTools
 
             EditorWindow focusedWindow = EditorWindow.focusedWindow;
 
-            if (focusedWindow != null)
+            if (focusedWindow)
             {
                 string windowType = focusedWindow.GetType().Name;
 

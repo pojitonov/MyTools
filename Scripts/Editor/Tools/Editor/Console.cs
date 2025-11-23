@@ -37,7 +37,7 @@ namespace MyTools
             }
             else
             {
-                UnityEngine.Debug.LogWarning($"Editor.log not found at:\n{Path.GetDirectoryName(filePath)}");
+                Debug.LogWarning(Debug.DefaultPrefix, $"Editor.log not found at:\n{Path.GetDirectoryName(filePath)}");
             }
         }
     }

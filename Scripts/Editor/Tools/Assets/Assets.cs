@@ -17,11 +17,11 @@ namespace MyTools
 
             foreach (var selectedObject in selectedObjects)
             {
-                string path = AssetDatabase.GetAssetPath((UnityEngine.Object)selectedObject);
+                string path = AssetDatabase.GetAssetPath((Object)selectedObject);
                 if (Path.GetExtension(path).ToLower() == ".fbx")
                 {
                     GameObject fbxModel = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                    if (fbxModel == null)
+                    if (!fbxModel)
                     {
                         Debug.LogError(Debug.DefaultPrefix, $"Could not load FBX model at path: {path}");
                         return;
