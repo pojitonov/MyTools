@@ -14,6 +14,7 @@ namespace MyTools
         private const string AutoRefreshPrefKey = "UIToolkit_AutoRefreshOnCompile";
         private const double FileCheckInterval = 0.5;
         private const double RefreshDebounce = 2.0;
+        private const double AssemblyReloadDelay = 1.0;
 
         private const string AutoRefreshMenuPath = Menus.EDITOR_UI_MENU + "Auto-Refresh on Compile";
         private const string ReimportUxmlMenuPath = Menus.EDITOR_UI_MENU + "Reimport UXML Assets &r";
@@ -22,6 +23,9 @@ namespace MyTools
         private static bool _wasCompiling;
         private static double _lastFileCheckTime;
         private static double _lastRefreshTime;
+        private static bool _isRefreshing;
+        private static bool _pendingRefresh;
+        private static double _lastAssemblyReloadTime = -1.0;
         private static readonly Dictionary<string, DateTime> _scriptFileTimestamps = new();
 
         static UIToolkitRefreshHelper()
@@ -31,6 +35,7 @@ namespace MyTools
             CompilationPipeline.compilationFinished += OnCompilationFinished;
             EditorApplication.update += CheckForCompilationComplete;
             EditorApplication.update += CheckForScriptFileChanges;
+            EditorApplication.update += CheckPendingRefresh;
             AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
             RefreshScriptFileTimestamps();
         }
@@ -71,19 +76,8 @@ namespace MyTools
                 {
                     if (currentWriteTime > lastWriteTime && !EditorApplication.isCompiling)
                     {
-                        double timeSinceLastRefresh = currentTime - _lastRefreshTime;
-                        if (timeSinceLastRefresh < RefreshDebounce)
-                            continue;
-
-                        EditorApplication.delayCall += () =>
-                        {
-                            if (!EditorApplication.isCompiling && _autoRefreshEnabled)
-                            {
-                                _lastRefreshTime = EditorApplication.timeSinceStartup;
-                                RefreshAuto();
-                            }
-                        };
                         RefreshScriptFileTimestamps();
+                        ScheduleRefresh(0.2);
                         break;
                     }
                 }
@@ -92,30 +86,36 @@ namespace MyTools
             }
         }
 
+        private static void CheckPendingRefresh()
+        {
+            if (!_autoRefreshEnabled || _isRefreshing) return;
+            if (!_pendingRefresh) return;
+            if (EditorApplication.isCompiling) return;
+
+            double currentTime = EditorApplication.timeSinceStartup;
+            double timeSinceLastRefresh = currentTime - _lastRefreshTime;
+            
+            bool assemblyReloadCheck = _lastAssemblyReloadTime < 0 || 
+                                       (currentTime - _lastAssemblyReloadTime) >= AssemblyReloadDelay;
+            
+            if (timeSinceLastRefresh >= RefreshDebounce && assemblyReloadCheck)
+            {
+                _pendingRefresh = false;
+                ExecuteRefresh();
+            }
+        }
+
         private static void OnCompilationFinished(object obj)
         {
             if (!_autoRefreshEnabled) return;
-
-            EditorApplication.delayCall += () =>
-            {
-                if (_autoRefreshEnabled && !EditorApplication.isCompiling)
-                {
-                    RefreshAuto();
-                }
-            };
+            ScheduleRefresh(0.1);
         }
 
         private static void OnAfterAssemblyReload()
         {
             if (!_autoRefreshEnabled) return;
-
-            EditorApplication.delayCall += () =>
-            {
-                if (_autoRefreshEnabled)
-                {
-                    RefreshAuto();
-                }
-            };
+            _lastAssemblyReloadTime = EditorApplication.timeSinceStartup;
+            ScheduleRefresh(AssemblyReloadDelay);
         }
 
         private static void CheckForCompilationComplete()
@@ -126,16 +126,49 @@ namespace MyTools
 
             if (_wasCompiling && !isCompiling)
             {
-                EditorApplication.delayCall += () =>
+                if (_lastAssemblyReloadTime < 0 || 
+                    (EditorApplication.timeSinceStartup - _lastAssemblyReloadTime) > AssemblyReloadDelay + 0.5)
                 {
-                    if (!EditorApplication.isCompiling && _autoRefreshEnabled)
-                    {
-                        RefreshAuto();
-                    }
-                };
+                    ScheduleRefresh(0.1);
+                }
             }
 
             _wasCompiling = isCompiling;
+        }
+
+        private static void ScheduleRefresh(double delay)
+        {
+            if (_isRefreshing)
+            {
+                _pendingRefresh = true;
+                return;
+            }
+
+            double currentTime = EditorApplication.timeSinceStartup;
+            double timeSinceLastRefresh = currentTime - _lastRefreshTime;
+            
+            if (timeSinceLastRefresh < RefreshDebounce)
+            {
+                _pendingRefresh = true;
+                return;
+            }
+
+            EditorApplication.delayCall += () =>
+            {
+                if (!_autoRefreshEnabled || EditorApplication.isCompiling)
+                {
+                    _pendingRefresh = true;
+                    return;
+                }
+
+                if (EditorApplication.isCompiling)
+                {
+                    _pendingRefresh = true;
+                    return;
+                }
+
+                ExecuteRefresh();
+            };
         }
 
         [MenuItem(AutoRefreshMenuPath, false, priority: Menus.EDITOR_UI_INDEX + 101)]
@@ -154,10 +187,37 @@ namespace MyTools
             return true;
         }
 
+        private static void ExecuteRefresh()
+        {
+            if (_isRefreshing) return;
+            
+            _isRefreshing = true;
+            _lastRefreshTime = EditorApplication.timeSinceStartup;
+            
+            try
+            {
+                ReimportUXMLAssets();
+                RefreshUIBuilderWindows();
+            }
+            finally
+            {
+                _isRefreshing = false;
+                
+                if (_pendingRefresh)
+                {
+                    _pendingRefresh = false;
+                    double timeSinceLastRefresh = EditorApplication.timeSinceStartup - _lastRefreshTime;
+                    if (timeSinceLastRefresh >= RefreshDebounce)
+                    {
+                        ScheduleRefresh(0.1);
+                    }
+                }
+            }
+        }
+
         private static void RefreshAuto()
         {
-            ReimportUXMLAssets();
-            RefreshUIBuilderWindows();
+            ExecuteRefresh();
         }
 
         [MenuItem(ReimportUxmlMenuPath, false, priority: Menus.EDITOR_UI_INDEX + 102)]
