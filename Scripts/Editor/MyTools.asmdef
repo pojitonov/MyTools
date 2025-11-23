@@ -1,7 +1,9 @@
 {
     "name": "MyTools",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:b189e39746534c09905fb569684cbfb5"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
