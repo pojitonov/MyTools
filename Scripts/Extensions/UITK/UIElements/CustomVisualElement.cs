@@ -8,9 +8,9 @@ using UnityEngine.Scripting;
 namespace MyTools.UIElements
 {
 #if UNITY_6000_0_OR_NEWER
-    [UxmlElement(nameof(VisualElement))]
+    [UxmlElement(nameof(CustomVisualElement))]
 #endif
-    public partial class VisualElement : ChildAnnotator
+    public partial class CustomVisualElement : ChildAnnotator
     {
         public const string gapX_name = "gap-X";
         public const string gapY_name = "gap-Y";
@@ -43,7 +43,7 @@ namespace MyTools.UIElements
             }
         }
 
-        public VisualElement() : base()
+        public CustomVisualElement() : base()
         {
             _gapX = 0;
             _gapY = 0;
@@ -66,7 +66,7 @@ namespace MyTools.UIElements
         {
             for (int i = 0; i < childCount; i++)
             {
-                UnityEngine.UIElements.VisualElement child = this[i];
+                VisualElement child = this[i];
 
                 if (child == lastChild)
                 {
@@ -83,26 +83,26 @@ namespace MyTools.UIElements
 
 #if !UNITY_6000_0_OR_NEWER
         [Preserve]
-        public new class UxmlFactory : UxmlFactory<VisualElement, UxmlTraits> { }
+        public new class UxmlFactory : UxmlFactory<CustomVisualElement, UxmlTraits> { }
 
         [Preserve]
         public new class UxmlTraits : VisualElement.UxmlTraits
         {
             private UxmlIntAttributeDescription gapXAttr = new UxmlIntAttributeDescription
             {
-                name = VisualElement.gapX_name,
+                name = CustomVisualElement.gapX_name,
                 defaultValue = 0
             };
             private UxmlIntAttributeDescription gapYAttr = new UxmlIntAttributeDescription
             {
-                name = VisualElement.gapY_name,
+                name = CustomVisualElement.gapY_name,
                 defaultValue = 0
             };
 
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                var item = (VisualElement)ve;
+                var item = (CustomVisualElement)ve;
 
                 item.gapX = gapXAttr.GetValueFromBag(bag, cc);
                 item.gapY = gapYAttr.GetValueFromBag(bag, cc);
