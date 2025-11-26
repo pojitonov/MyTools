@@ -569,7 +569,7 @@ public static partial class UIToolKitExtensions
     /// <summary>Loads a StyleSheet from Resources and adds it to the VisualElement</summary>
     /// <param name="resourcePath">Path to the stylesheet in Resources folder (e.g., "Styles/generated" or "AI.uss")</param>
     /// <seealso cref="Resources.Load{T}(string)" />
-    public static T Style<T>(this T e, string resourcePath) where T : VisualElement
+    public static T StyleSheet<T>(this T e, string resourcePath) where T : VisualElement
     {
         var styleSheet = Resources.Load<StyleSheet>(resourcePath);
         if (styleSheet)
