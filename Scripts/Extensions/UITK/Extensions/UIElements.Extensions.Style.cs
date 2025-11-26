@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 using TextElement = UnityEngine.UIElements.TextElement;
+using CustomVisualElement = MyTools.UIElements.CustomVisualElement;
 
 public static partial class UIToolKitExtensions
 {
@@ -283,6 +284,22 @@ public static partial class UIToolKitExtensions
     /// <summary>Sets paddings independently</summary>
     public static T Padding<T>(this T e, float left, float right, float top, float bottom) where T : VisualElement => (e.style.paddingLeft = left, e.style.paddingRight = right,
         e.style.paddingTop = top, e.style.paddingBottom = bottom, e).Item5;
+
+    #endregion
+
+    #region Gap
+
+    /// <summary>Sets gapX and gapY to the same value for MyTools.UIElements.CustomVisualElement</summary>
+    public static CustomVisualElement Gap(this CustomVisualElement e, int value) => (e.gapX = value, e.gapY = value, e).Item3;
+
+    /// <summary>Sets gapX and gapY independently for CustomVisualElement</summary>
+    public static CustomVisualElement Gap(this CustomVisualElement e, int gapX, int gapY) => (e.gapX = gapX, e.gapY = gapY, e).Item3;
+
+    /// <summary>Sets gapX for CustomVisualElement</summary>
+    public static CustomVisualElement GapX(this CustomVisualElement e, int value) => (e.gapX = value, e).Item2;
+
+    /// <summary>Sets gapY for CustomVisualElement</summary>
+    public static CustomVisualElement GapY(this CustomVisualElement e, int value) => (e.gapY = value, e).Item2;
 
     #endregion
 

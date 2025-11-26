@@ -1,11 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UIElements;
+using CustomVisualElement = MyTools.UIElements.CustomVisualElement;
 
 public static partial class UIToolKitExtensions
 {
-    /// <summary>Creates a new VisualElement</summary>
-    public static VisualElement VisualElement() => new();
+    /// <summary>Creates a new VisualElement with gap support (gap defaults to 0)</summary>
+    public static CustomVisualElement VisualElement() => new CustomVisualElement();
 
     /// <summary>Creates a new TextElement</summary>
     public static TextElement TextElement() => new();
@@ -25,8 +26,8 @@ public static partial class UIToolKitExtensions
     /// <summary>Creates a new VisualElement of type T while parenting it to a container Element</summary>
     public static T Make<T>(this VisualElement container) where T : VisualElement, new() => new T().Container(container);
 
-    /// <summary>Creates and returns new VisualElement while parenting it to a container Element</summary>
-    public static VisualElement VisualElement(this VisualElement container) => new VisualElement().Container(container);
+    /// <summary>Creates and returns new VisualElement with gap support (gap defaults to 0) while parenting it to a container Element</summary>
+    public static CustomVisualElement VisualElement(this VisualElement container) => new CustomVisualElement().Container(container);
 
     /// <summary>Creates and returns a new DropDownField while parenting it to a container Element</summary>
     public static DropdownField DropdownField(this VisualElement container) => new DropdownField().Container(container);
