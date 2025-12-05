@@ -1,9 +1,11 @@
 fileFormatVersion: 2
 guid: 33a8360e8bdae454792894091be349da
-AssetOrigin:
-  serializedVersion: 1
-  productId: 272042
-  packageName: Figma to UI Toolkit Converter
-  packageVersion: 1.2.2
-  assetPath: Assets/D.A. Assets/Figma-to-UITK-Converter/Runtime/Assembly/ChildAnnotator.cs
-  uploadId: 773613
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

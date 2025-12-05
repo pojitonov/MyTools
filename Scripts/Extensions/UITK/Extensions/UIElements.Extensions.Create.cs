@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_6000_0_OR_NEWER
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using CustomVisualElement = MyTools.UIElements.CustomVisualElement;
@@ -105,3 +106,4 @@ public static partial class UIToolKitExtensions
         return element;
     }
 }
+#endif

@@ -117,7 +117,7 @@ namespace MyTools
 #if UNITY_6000
             EditorSnapSettings.snapEnabled = !EditorSnapSettings.snapEnabled;
 #else
-            Utils.Log("Snapping shortcut is not supported in this version.");
+            Debug.Log("Snapping shortcut is not supported in this version.");
 #endif
         }
 

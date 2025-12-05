@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_6000_0_OR_NEWER
+using System;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -144,3 +145,4 @@ public static partial class UIToolKitExtensions
         e.RegisterCallback<MouseLeaveEvent>(_ => target.Visible(false));
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿#if UNITY_6000_0_OR_NEWER
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
@@ -607,3 +608,4 @@ public static partial class UIToolKitExtensions
         Vertical
     }
 }
+#endif
