@@ -20,14 +20,26 @@ namespace MyTools
         {
             Object selectedObject = Selection.activeObject;
 
-            if (selectedObject is AudioClip selectedClip)
+            if (audioSource && audioSource.isPlaying)
             {
-                if (audioSource && audioSource.isPlaying && lastSelectedClip != selectedClip)
+                if (selectedObject is AudioClip selectedClip)
+                {
+                    if (lastSelectedClip != selectedClip)
+                    {
+                        audioSource.Stop();
+                        DestroyAudioSource();
+                        lastSelectedClip = selectedClip;
+                    }
+                }
+                else
                 {
                     audioSource.Stop();
                     DestroyAudioSource();
+                    lastSelectedClip = null;
                 }
-
+            }
+            else if (selectedObject is AudioClip selectedClip)
+            {
                 lastSelectedClip = selectedClip;
             }
         }
