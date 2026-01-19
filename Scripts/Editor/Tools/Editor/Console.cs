@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using System;
-using System.Diagnostics;
 using System.IO;
 using UnityEditor;
 
@@ -18,7 +17,7 @@ namespace MyTools
         [MenuItem(Menus.EDITOR_MENU + "Clear Console %l", validate = true)]
         static bool ValidateClear() => !State.disabled;
 
-        [MenuItem(Menus.EDITOR_MENU + "Open Editor Logs", priority = Menus.EDITOR_INDEX + 401)]
+        [MenuItem(Menus.EDITOR_MENU + "Copy Editor Log Path", priority = Menus.EDITOR_INDEX + 401)]
         static void OpenLogs()
         {
             string filePath = Path.Combine(
@@ -28,16 +27,12 @@ namespace MyTools
 
             if (File.Exists(filePath))
             {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = "explorer.exe",
-                    Arguments = $"/select,\"{filePath}\"",
-                    UseShellExecute = true
-                });
+                EditorGUIUtility.systemCopyBuffer = filePath;
+                Debug.Log(Debug.DefaultPrefix, "Editor log path copied to clipboard");
             }
             else
             {
-                Debug.LogWarning(Debug.DefaultPrefix, $"Editor.log not found at:\n{Path.GetDirectoryName(filePath)}");
+                 Debug.LogWarning(Debug.DefaultPrefix, "Editor.log not found");
             }
         }
     }

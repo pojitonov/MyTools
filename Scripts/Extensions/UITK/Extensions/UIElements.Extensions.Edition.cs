@@ -13,18 +13,18 @@ public static partial class UIToolKitExtensions
     /// </summary>
     /// <returns>the VisualElement</returns>
     /// <seealso cref="VisualElement.AddToClassList"/>
-    public static T USS<T>(this T e, string A) where T : VisualElement
-    {
-        if (string.IsNullOrWhiteSpace(A)) return e;
-
-        var classes = A.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
-        foreach (var className in classes)
-        {
-            e.AddToClassList(className);
-        }
-
-        return e;
-    }
+    // public static T USS<T>(this T e, string A) where T : VisualElement
+    // {
+    //     if (string.IsNullOrWhiteSpace(A)) return e;
+    //
+    //     var classes = A.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+    //     foreach (var className in classes)
+    //     {
+    //         e.AddToClassList(className);
+    //     }
+    //
+    //     return e;
+    // }
 
     /// <inheritdoc cref="USS{T}(T,string)"/>
     public static T USS<T>(this T e, string A, string B) where T : VisualElement

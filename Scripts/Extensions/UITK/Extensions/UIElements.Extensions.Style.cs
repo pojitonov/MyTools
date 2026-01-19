@@ -288,21 +288,21 @@ public static partial class UIToolKitExtensions
 
     #endregion
 
-    #region Gap
-
-    /// <summary>Sets gapX and gapY to the same value for MyTools.UIElements.CustomVisualElement</summary>
-    public static CustomVisualElement Gap(this CustomVisualElement e, int value) => (e.gapX = value, e.gapY = value, e).Item3;
-
-    /// <summary>Sets gapX and gapY independently for CustomVisualElement</summary>
-    public static CustomVisualElement Gap(this CustomVisualElement e, int gapX, int gapY) => (e.gapX = gapX, e.gapY = gapY, e).Item3;
-
-    /// <summary>Sets gapX for CustomVisualElement</summary>
-    public static CustomVisualElement GapX(this CustomVisualElement e, int value) => (e.gapX = value, e).Item2;
-
-    /// <summary>Sets gapY for CustomVisualElement</summary>
-    public static CustomVisualElement GapY(this CustomVisualElement e, int value) => (e.gapY = value, e).Item2;
-
-    #endregion
+    // #region Gap
+    //
+    // /// <summary>Sets gapX and gapY to the same value for MyTools.UIElements.CustomVisualElement</summary>
+    // public static CustomVisualElement Gap(this CustomVisualElement e, int value) => (e.gapX = value, e.gapY = value, e).Item3;
+    //
+    // /// <summary>Sets gapX and gapY independently for CustomVisualElement</summary>
+    // public static CustomVisualElement Gap(this CustomVisualElement e, int gapX, int gapY) => (e.gapX = gapX, e.gapY = gapY, e).Item3;
+    //
+    // /// <summary>Sets gapX for CustomVisualElement</summary>
+    // public static CustomVisualElement GapX(this CustomVisualElement e, int value) => (e.gapX = value, e).Item2;
+    //
+    // /// <summary>Sets gapY for CustomVisualElement</summary>
+    // public static CustomVisualElement GapY(this CustomVisualElement e, int value) => (e.gapY = value, e).Item2;
+    //
+    // #endregion
 
     #region Scaling
 
@@ -578,24 +578,24 @@ public static partial class UIToolKitExtensions
 
     /// <summary>Sets the StyleSheet a VisualElement should use</summary>
     /// <seealso cref="StyleSheet" />
-    public static T StyleSheet<T>(this T e, StyleSheet value) where T : VisualElement
-    {
-        e.styleSheets.Add(value);
-        return e;
-    }
+    // public static T StyleSheet<T>(this T e, StyleSheet value) where T : VisualElement
+    // {
+    //     e.styleSheets.Add(value);
+    //     return e;
+    // }
 
     /// <summary>Loads a StyleSheet from Resources and adds it to the VisualElement</summary>
     /// <param name="resourcePath">Path to the stylesheet in Resources folder (e.g., "Styles/generated" or "AI.uss")</param>
     /// <seealso cref="Resources.Load{T}(string)" />
-    public static T StyleSheet<T>(this T e, string resourcePath) where T : VisualElement
-    {
-        var styleSheet = Resources.Load<StyleSheet>(resourcePath);
-        if (styleSheet)
-        {
-            e.styleSheets.Add(styleSheet);
-        }
-        return e;
-    }
+    // public static T StyleSheet<T>(this T e, string resourcePath) where T : VisualElement
+    // {
+    //     var styleSheet = Resources.Load<StyleSheet>(resourcePath);
+    //     if (styleSheet)
+    //     {
+    //         e.styleSheets.Add(styleSheet);
+    //     }
+    //     return e;
+    // }
 
     /// <inheritdoc cref="VisualElement.tooltip" />
     public static T ToolTip<T>(this T e, string value) where T : VisualElement => (e.tooltip = value, e).Item2;

@@ -1,4 +1,4 @@
-Shader "My Tools/Wireframe/Global/Transparent-Culled"
+Shader "MyTools/Wireframe/Global/Transparent-Culled"
 {
 	SubShader
 	{

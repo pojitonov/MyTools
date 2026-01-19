@@ -1,4 +1,4 @@
-Shader "My Tools/Wireframe/Global/Solid"
+Shader "MyTools/Wireframe/Global/Solid"
 {
 	SubShader
 	{

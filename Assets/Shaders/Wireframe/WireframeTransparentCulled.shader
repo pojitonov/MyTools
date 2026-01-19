@@ -1,4 +1,4 @@
-Shader "My Tools/Wireframe/Transparent-Culled"
+Shader "MyTools/Wireframe/Transparent-Culled"
 {
 	Properties
 	{

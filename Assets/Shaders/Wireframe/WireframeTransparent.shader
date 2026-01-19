@@ -1,4 +1,4 @@
-Shader "My Tools/Wireframe/Transparent"
+Shader "MyTools/Wireframe/Transparent"
 {
 	Properties
 	{

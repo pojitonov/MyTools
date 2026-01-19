@@ -1,4 +1,4 @@
-Shader "My Tools/Wireframe/Solid"
+Shader "MyTools/Wireframe/Solid"
 {
 	Properties
 	{

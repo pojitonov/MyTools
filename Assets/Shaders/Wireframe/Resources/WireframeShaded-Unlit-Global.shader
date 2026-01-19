@@ -1,4 +1,4 @@
-Shader "My Tools/Wireframe/Global/Shaded-Unlit"
+Shader "MyTools/Wireframe/Global/Shaded-Unlit"
 {
 	Properties
 	{
