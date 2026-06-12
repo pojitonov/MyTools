@@ -181,7 +181,6 @@ namespace MyTools
                 }
             }
 
-            Debug.LogWarning(Debug.DefaultPrefix, "No active GameView or SceneView found to maximize.");
             return null;
         }
 

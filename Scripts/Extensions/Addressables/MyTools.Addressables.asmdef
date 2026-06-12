@@ -1,8 +1,10 @@
 {
-    "name": "MyTools",
+    "name": "Addressables",
     "rootNamespace": "",
     "references": [
-        "MyTools.Extensions",
+        "Unity.Addressables",
+        "Unity.Addressables.Editor",
+        "MyTools",
         "MyTools.Debug"
     ],
     "includePlatforms": [],
